@@ -11,3 +11,6 @@ Frontend
 - [ ] Image processing UI
 - [ ] Create simple list of images to select
 - [ ] Create OSD component
+
+Command for converting svs to dz:  
+```vips dzsave ./server/uploads/GT450-39.svs[attach-associated] server/dz/GT450-39```

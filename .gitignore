@@ -2,4 +2,7 @@ node_modules
 .DS_Store
 dist
 dist-ssr
+public
+server/uploads
+server/dz
 *.local
