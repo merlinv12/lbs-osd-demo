@@ -13,11 +13,6 @@ const upload = (file: any, onUploadProgress: any) => {
   });
 };
 
-const getFiles = () => {
-  return http.get("/files");
-};
-
 export default {
-  upload,
-  getFiles,
+  upload
 };

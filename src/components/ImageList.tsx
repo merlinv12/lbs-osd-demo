@@ -1,7 +1,10 @@
 import { useState, useEffect } from 'react';
+import { Container } from 'react-bootstrap';
+import ListGroup from 'react-bootstrap/ListGroup'
 
 
-const ImageList = ({setSelectedDzi}) => {
+
+const ImageList = ({setSelectedDzi, selectedDzi}) => {
     const [dziList, setDziList] = useState([]);
 
     const getDziList = async () => {
@@ -19,21 +22,23 @@ const ImageList = ({setSelectedDzi}) => {
       }, []);
 
     return (
-        <div>
+        <ListGroup as="ul" className="mt-2">
             {dziList.map((dzi, index) => {
-                return (
-                    <button
-                      key={index}
-                      onClick={() => {
-                        return setSelectedDzi(dzi);
-                      }}
-                    >
-                      {dzi}
-                    </button>
-                  );
+                        return (
+                            <ListGroup.Item as="li"
+                            key={index}
+                            action
+                            active={dzi === selectedDzi}
+                            onClick={() => {
+                                return setSelectedDzi(dzi);
+                            }}
+                            >
+                            {dzi}
+                            </ListGroup.Item>
+                        );
 
-            })}
-        </div>
+                    })}
+        </ListGroup>
     );
 }
 

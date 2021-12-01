@@ -43,13 +43,11 @@ app.get('/', (req, res) => {
 });
 
 app.post('/image', (req, res, next) => {
-  // req.file is the `avatar` file
-  // req.body will hold the text fields, if there were any
   let imageUpload = multer({ storage: storage, fileFilter: imageFilter }).single('image');
   imageUpload(req, res, (err) => {
     // req.file contains information of uploaded file
     // req.body contains information of text fields, if there were any
-
+    console.log(req.file)
     if (req.fileValidationError) {
         return res.send(req.fileValidationError);
     }
