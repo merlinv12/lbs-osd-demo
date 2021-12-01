@@ -33,9 +33,10 @@ useEffect(() => {
 
 return (
   <div 
+  className="mt-2"
   id="openSeaDragon"
   style={{
-    height: "1080px",
+    height: "90vh",
     width: "100%"
   }}
   >

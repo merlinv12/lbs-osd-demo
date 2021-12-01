@@ -26,10 +26,10 @@ function App() {
         </Container>
       </Navbar>
       <Row>
-        <Col xs={3} md={2}>
+        <Col md={2}>
           <ImageList setSelectedDzi={setSelectedDzi} selectedDzi={selectedDzi} />
         </Col>
-        <Col xs={12} md={8}>
+        <Col md={10}>
           {selectedDzi && 
             <OpenSeaDragonViewer imageDzi={selectedDzi}/>
           }

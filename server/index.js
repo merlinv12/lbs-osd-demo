@@ -26,7 +26,6 @@ const imageFilter = (req, file, cb) => {
   cb(null, true);
 };
 
-// app.use('/public', express.static(__dirname + '/public'));
 app.use('/', express.static('../public'));
 app.use('/dz', express.static('./dz'));
 app.use('/openseadragon-images', express.static('./openseadragon-images'));
