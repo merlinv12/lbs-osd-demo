@@ -3,6 +3,7 @@ const multer  = require('multer');
 const upload = multer({ dest: 'uploads/' });
 const path = require('path');
 const fs = require('fs/promises')
+const sharp = require('sharp');
 const PORT = 8000;
 
 const app = express();
@@ -26,6 +27,22 @@ const imageFilter = (req, file, cb) => {
   cb(null, true);
 };
 
+const convertToDZI = (image) => {
+  let fullFileName = path.basename(image);
+  let extenstion = path.extname(image);
+  let fileName = path.basename(fullFileName, extenstion);
+  sharp(image)
+      .png()
+      .tile({
+          size: 512
+      })
+    .toFile(`./dz/${fileName}.dz`, function(err, info) {
+      // output.dzi is the Deep Zoom XML definition
+      // output_files contains 512x512 tiles grouped by zoom level
+      console.log(err)
+    });
+  }
+
 app.use('/', express.static('../public'));
 app.use('/dz', express.static('./dz'));
 app.use('/openseadragon-images', express.static('./openseadragon-images'));
@@ -43,6 +60,7 @@ app.get('/', (req, res) => {
 
 app.post('/image', (req, res, next) => {
   let imageUpload = multer({ storage: storage, fileFilter: imageFilter }).single('image');
+  console.log('Uploading...')
   imageUpload(req, res, (err) => {
     // req.file contains information of uploaded file
     // req.body contains information of text fields, if there were any
@@ -61,8 +79,8 @@ app.post('/image', (req, res, next) => {
     }
 
     // Display uploaded image for user validation
-    console.log('Uploading...')
-    res.send(`You have uploaded the image <a href="./">Upload another image</a>`);
+    convertToDZI(`./${req.file.destination}${req.file.filename}`)
+    res.send(`You have uploaded the image.  Wait a sec and it will process and be visible on the slide nav bar. Sorry this upload UI sucks its a WIP`);
   });
 })
 

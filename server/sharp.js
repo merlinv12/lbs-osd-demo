@@ -18,3 +18,5 @@ sharp(image)
     console.log(err)
   });
 }
+
+convertToDZI('./uploads/test.svs')
