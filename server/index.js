@@ -31,6 +31,7 @@ const convertToDZI = (image) => {
   let fullFileName = path.basename(image);
   let extenstion = path.extname(image);
   let fileName = path.basename(fullFileName, extenstion);
+  console.log(`Converting ${fullFileName} to dzi...`)
   sharp(image, {limitInputPixels: false})
       .png()
       .tile({

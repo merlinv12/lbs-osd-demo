@@ -2,7 +2,7 @@ import OpenSeaDragon from "openseadragon";
 import { Viewer } from "openseadragon";
 import React, { useEffect, useState } from "react";
 
-const OpenSeaDragonViewer = ({imageDzi}) => {
+const OpenSeaDragonViewer = ({imageDzi, animationTime, zoomPerClick, zoomPerSecond}) => {
 const [viewer, setViewer] = useState<Viewer | null>(null);
 
 const InitOpenseadragon = (imageDzi) => {
@@ -12,13 +12,14 @@ const InitOpenseadragon = (imageDzi) => {
           id: "openSeaDragon",
           prefixUrl: "openseadragon-images/",
           tileSources: `/dz/${imageDzi}`,
-          animationTime: 0.5,
-          blendTime: 0.1,
-          constrainDuringPan: true,
-          maxZoomPixelRatio: 2,
-          minZoomLevel: 1,
-          visibilityRatio: 1,
-          zoomPerScroll: 2
+          animationTime: animationTime,
+          // blendTime: 0.1,
+          // constrainDuringPan: true,
+          // maxZoomPixelRatio: 2,
+          // minZoomLevel: 1,
+          // visibilityRatio: 1,
+          zoomPerSecond: zoomPerSecond,
+          zoomPerClick: zoomPerClick
         })
       );
 }
@@ -28,7 +29,7 @@ useEffect(() => {
     return () => {
         viewer && viewer.destroy();
     };
-  }, [imageDzi]);
+  }, [imageDzi, animationTime, zoomPerClick, zoomPerSecond]);
 
 
 return (

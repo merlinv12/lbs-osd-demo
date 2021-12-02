@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import Form from 'react-bootstrap/Form'
 import ImageUploadService from '../services/ImageUploadService';
-import { Button } from 'react-bootstrap'
+import { Button, Modal } from 'react-bootstrap'
 import axiosInstance from "../services/axios";
 
 
-const ImageUpload = () => {
+const ImageUpload = ({show, onHide}) => {
 
   const [selectedFile, setSelectedFile] = useState<any>(undefined);
   const [currentFile, setCurrentFile] = useState(undefined);
@@ -48,14 +48,23 @@ const ImageUpload = () => {
     //     Upload
     //   </Button>
     // </Form>
-    <form action="/image" method="POST" encType="multipart/form-data">
-    <div>
-      <input type="file" name="image" />
-    </div>
-    <div>
-      <input type="submit" name="btn_upload_profile_pic" value="Upload" />
-    </div>
-  </form>
+
+    <Modal show={show} onHide={onHide}>
+    <Modal.Header closeButton>
+      <Modal.Title>Upload Image File</Modal.Title>
+    </Modal.Header>
+      <Modal.Body>
+        <form action="/image" method="POST" encType="multipart/form-data">
+          <div>
+            <input type="file" name="image" />
+          </div>
+          <div>
+            <input type="submit" name="btn_upload_profile_pic" value="Upload" />
+          </div>
+        </form>
+      </Modal.Body>
+  </Modal>
+
   )
 }
 

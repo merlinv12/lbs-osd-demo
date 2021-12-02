@@ -13,4 +13,4 @@ Frontend
 - [ ] Create OSD component
 
 Command for converting svs to dz:  
-```vips dzsave ./server/uploads/GT450-39.svs[attach-associated] server/dz/GT450-39```
+```vips dzsave ./server/uploads/GT450-40.svs server/dz/GT450-40 --vips-progress --vips-leak```
