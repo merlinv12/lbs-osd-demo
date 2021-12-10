@@ -13,7 +13,8 @@ function App() {
   const [selectedDzi, setSelectedDzi] = useState();
   const [animationTime, setAnimationTime] = useState(1.2);
   const [zoomPerClick, setZoomPerClick] = useState(2.0);
-  const [zoomPerSecond, setZoomPerSecond] = useState(1.0)
+  const [zoomPerSecond, setZoomPerSecond] = useState(1.0);
+  const [viewerRotation, setViewerRotation] = useState(1);
 
   const [show, setShow] = useState(false);
 
@@ -36,11 +37,18 @@ function App() {
           <ViewerSettingsInput animationTime={animationTime} setAnimationTime={setAnimationTime} 
                               zoomPerClick={zoomPerClick} setZoomPerClick={setZoomPerClick}
                               zoomPerSecond={zoomPerSecond} setZoomPerSecond={setZoomPerSecond}
+                              viewerRotation={viewerRotation} setViewerRotation={setViewerRotation}
             />
         </Col>
         <Col md={10}>
           {selectedDzi && 
-            <OpenSeaDragonViewer imageDzi={selectedDzi} animationTime={animationTime} zoomPerClick={zoomPerClick} zoomPerSecond={zoomPerSecond} />
+            <OpenSeaDragonViewer 
+            imageDzi={selectedDzi} 
+            animationTime={animationTime} 
+            zoomPerClick={zoomPerClick} 
+            zoomPerSecond={zoomPerSecond} 
+            viewerRotation={viewerRotation}
+            />
           }
         </Col>
       </Row>

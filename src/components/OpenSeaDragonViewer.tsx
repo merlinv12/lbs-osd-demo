@@ -2,7 +2,7 @@ import OpenSeaDragon from "openseadragon";
 import { Viewer } from "openseadragon";
 import React, { useEffect, useState } from "react";
 
-const OpenSeaDragonViewer = ({imageDzi, animationTime, zoomPerClick, zoomPerSecond}) => {
+const OpenSeaDragonViewer = ({imageDzi, animationTime, zoomPerClick, zoomPerSecond, viewerRotation}) => {
 const [viewer, setViewer] = useState<Viewer | null>(null);
 
 const InitOpenseadragon = (imageDzi) => {
@@ -31,6 +31,11 @@ useEffect(() => {
     };
   }, [imageDzi, animationTime, zoomPerClick, zoomPerSecond]);
 
+useEffect(()=>{
+  if (viewer) {
+    viewer.viewport.setRotation(viewerRotation)
+  }
+}, [viewerRotation])
 
 return (
   <div 

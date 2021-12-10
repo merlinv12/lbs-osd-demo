@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Form, Row, Col } from 'react-bootstrap';
 
 
-const ViewerSettingsInput = ({setAnimationTime, animationTime, setZoomPerClick, zoomPerClick, setZoomPerSecond, zoomPerSecond}) => {
+const ViewerSettingsInput = ({setAnimationTime, animationTime, setZoomPerClick, zoomPerClick, setZoomPerSecond, zoomPerSecond, viewerRotation, setViewerRotation}) => {
     return (
     <Form className="mt-5">
       <Form.Group>
@@ -22,14 +22,22 @@ const ViewerSettingsInput = ({setAnimationTime, animationTime, setZoomPerClick, 
             max={10}
             step={0.2}
             /> 
-        <Form.Label>Zoom per Second: {zoomPerSecond}</Form.Label>
-        {/* <Form.Range
+        {/* <Form.Label>Zoom per Second: {zoomPerSecond}</Form.Label>
+        <Form.Range
             value={zoomPerSecond}
             onChange={e => setZoomPerSecond(e.target.value)}
             min={1}
             max={5}
             step={0.2}
             />  */}
+        <Form.Label>Rotation: {viewerRotation}</Form.Label>
+        <Form.Range
+            value={viewerRotation}
+            onChange={e => setViewerRotation(e.target.value)}
+            min={0}
+            max={359}
+            step={1}
+            /> 
       </Form.Group>
     </Form>
     )

@@ -6,3 +6,4 @@ public
 server/uploads
 server/dz
 *.local
+env

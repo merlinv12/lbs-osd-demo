@@ -7,7 +7,7 @@ let fullFileName = path.basename(image);
 let extenstion = path.extname(image);
 let fileName = path.basename(fullFileName, extenstion);
 console.log(image)
-sharp(image)
+sharp(image, {limitInputPixels: false})
     .png()
     .tile({
         size: 512
