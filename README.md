@@ -1,5 +1,15 @@
 # OpenSeadragon Demo using VIPS
 
+## Setup
+1.  Install Node
+
+2.  Install Libvips
+
+3.  Install Openslide
+
+4.  npm ci
+5.  cd ./server && node .
+
 ## TODO
 Server
 - [ ] Handle upload of new image file
