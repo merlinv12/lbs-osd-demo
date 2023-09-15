@@ -10,7 +10,12 @@ console.log(image)
 sharp(image, {limitInputPixels: false})
     .png()
     .tile({
-        size: 512
+        size: 1024
+    })
+    .toBuffer(function(err, data, info) {
+      console.log(err) 
+      console.log(data)
+      console.log(info)
     })
   .toFile(`${fileName}.dz`, function(err, info) {
     // output.dzi is the Deep Zoom XML definition
@@ -19,4 +24,5 @@ sharp(image, {limitInputPixels: false})
   });
 }
 
-convertToDZI('./uploads/test.svs')
+
+

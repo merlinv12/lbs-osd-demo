@@ -1,12 +1,21 @@
 const express = require('express')
+const http2 = require('http2')
+const http2Express = require('http2-express-bridge')
 const multer  = require('multer');
 const upload = multer({ dest: 'uploads/' });
 const path = require('path');
 const fs = require('fs/promises')
+const { readFileSync } = require('fs');
 const sharp = require('sharp');
+const {getZoomPixelCoords} = require('./utils.js')
 const PORT = 8000;
 
-const app = express();
+const app = http2Express(express);
+const options = {
+  key: readFileSync('./private.key'),
+  cert: readFileSync('./csr.pem'),
+  allowHTTP1: true
+}
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -37,6 +46,7 @@ const convertToDZI = (image) => {
       .tile({
           size: 512
       })
+      .fill()
     .toFile(`./dz/${fileName}.dz`, function(err, info) {
       // output.dzi is the Deep Zoom XML definition
       // output_files contains 512x512 tiles grouped by zoom level
@@ -100,6 +110,65 @@ app.get('/images', async (req, res) => {
   }
 })
 
-app.listen(PORT, ()=> {
-    console.log(`Server running on port: ${PORT}`)
+app.get('/dz/:filename/:deepZoomLevel/:colrow', async (req, res) => {
+  // remove '_files' from filename
+  let filename = req.params.filename.replace('_files', '')
+  // seperate col and row and remove .png
+  let colrow = req.params.colrow.split('_')
+  let col = Number(colrow[0])
+  let row = Number(colrow[1].replace('.jpeg', ''))
+  
+  
+  try {
+    res.setHeader('Content-Type', 'image/jpeg'); // Change to the appropriate MIME type
+    let pageAndPixel = getZoomPixelCoords(Number(req.params.deepZoomLevel), col, row)
+    let {top, left, width, height, page} = pageAndPixel
+    let metadata = await sharp(`./uploads/sample1.svs`, {limitInputPixels: false, page: page}).metadata()
+    const baseWidth = metadata.width
+    const baseHeight = metadata.height
+    // Lets do some checks to make sure we are not going out of bounds
+    let bottomRightCorner = [left + width, top + height];
+    if (bottomRightCorner[0] >= baseWidth || bottomRightCorner[1] >= baseHeight) {
+        console.log('bottom right corner out of bounds', bottomRightCorner[0], baseWidth, bottomRightCorner[1], baseHeight)
+        // create a red image to show where the out of bounds is
+        if (bottomRightCorner[0] >= baseWidth) {
+          console.log('width out of bounds')
+        width = width - (bottomRightCorner[0] - baseWidth)
+        }
+        if (bottomRightCorner[1] >= baseHeight) {
+          console.log('height out of bounds')
+        height = height - (bottomRightCorner[1] - baseHeight)
+        }
+        // let redImage = await sharp({create: {width: 1024, height: 1024, channels: 4, background: {r: 255, g: 0, b: 0, alpha: 1}, noise: {
+        //   type: 'gaussian',
+        //   mean: 128,
+        //   sigma: 30
+        // }}}).png().toBuffer()
+        // return res.send(redImage)
+      }
+      
+    console.log('new width and height', width, height)
+    let processedImage = await sharp('./uploads/sample1.svs', {limitInputPixels: false, page: page})
+    // .withMetadata()
+    .extract({ top: top, left: left, width: width-1, height: height-1 })
+    .jpeg()
+    .resize(1024, 1024)
+    .toBuffer()
+    // Set the Content-Type header  
+    // Send the image buffer as the response body
+    // console.log(process.memoryUsage())
+    res.send(processedImage);
+    } catch(err) {
+    console.log(err)
+  }
+
+})
+
+// app.listen(PORT, ()=> {
+//     console.log(`Server running on port: ${PORT}`)
+// })
+
+const server = http2.createSecureServer(options, app)
+server.listen(PORT, () => {
+  console.log(`Server running on port: ${PORT}`)
 })
