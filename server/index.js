@@ -7,7 +7,7 @@ const path = require('path');
 const fs = require('fs/promises')
 const { readFileSync } = require('fs');
 const sharp = require('sharp');
-const {getZoomPixelCoords} = require('./utils.js')
+const { getZoomPixelCoords } = require('./utils.js')
 const PORT = 8000;
 
 const app = http2Express(express);
@@ -126,33 +126,40 @@ app.get('/dz/:filename/:deepZoomLevel/:colrow', async (req, res) => {
     let metadata = await sharp(`./uploads/sample1.svs`, {limitInputPixels: false, page: page}).metadata()
     const baseWidth = metadata.width
     const baseHeight = metadata.height
+    let newWidth = width;
+    let newHeight = height;
+    let newWidthRatio = 1
+    let newHeightRatio = 1
+    // Problem we're stuck on is that tiles on the right edge are not always 1024px wide (same for bottom edge)
+    // We need to figure out how to resize to the correct tile sizes in these edge areas
     // Lets do some checks to make sure we are not going out of bounds
     let bottomRightCorner = [left + width, top + height];
     if (bottomRightCorner[0] >= baseWidth || bottomRightCorner[1] >= baseHeight) {
         console.log('bottom right corner out of bounds', bottomRightCorner[0], baseWidth, bottomRightCorner[1], baseHeight)
         // create a red image to show where the out of bounds is
+        
         if (bottomRightCorner[0] >= baseWidth) {
           console.log('width out of bounds')
-        width = width - (bottomRightCorner[0] - baseWidth)
+          newWidth = Math.abs(width - (bottomRightCorner[0] - baseWidth))
+          newWidthRatio = newWidth / width
         }
         if (bottomRightCorner[1] >= baseHeight) {
           console.log('height out of bounds')
-        height = height - (bottomRightCorner[1] - baseHeight)
+          newHeight = Math.abs(height - (bottomRightCorner[1] - baseHeight))
+          newHeightRatio = newHeight / height
         }
-        // let redImage = await sharp({create: {width: 1024, height: 1024, channels: 4, background: {r: 255, g: 0, b: 0, alpha: 1}, noise: {
-        //   type: 'gaussian',
-        //   mean: 128,
-        //   sigma: 30
-        // }}}).png().toBuffer()
-        // return res.send(redImage)
       }
-      
-    console.log('new width and height', width, height)
+    
+    console.log('page', page), 
+    console.log('new width and height', newWidth, newHeight)
+    console.log('new width and height ratio', newWidthRatio, newHeightRatio)
+    if (newWidth < 0 || newHeight < 0) { 
+     return res.send('out of bounds')
+    }
     let processedImage = await sharp('./uploads/sample1.svs', {limitInputPixels: false, page: page})
-    // .withMetadata()
-    .extract({ top: top, left: left, width: width-1, height: height-1 })
+    .extract({ top: top, left: left, width: newWidth, height: newHeight })
     .jpeg()
-    .resize(1024, 1024)
+    .resize(Math.floor((1024 * newWidthRatio)), Math.floor((1024 * newHeightRatio)))
     .toBuffer()
     // Set the Content-Type header  
     // Send the image buffer as the response body

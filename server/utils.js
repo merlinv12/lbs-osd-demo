@@ -62,7 +62,7 @@ const getBestPageFromDeepZoomLevel = (deepZoomLevel) => {
 }
 
 const getDownsampleFactor = (deepZoomLevel) => {
-    return Math.pow(2, (numDeepZoomLevels) - deepZoomLevel);
+    return Math.pow(2, numDeepZoomLevels - deepZoomLevel);
 }
 
 const getDeepZoomLevelFromDownsampleFactor = (downSampleFactor) => {
@@ -73,12 +73,11 @@ const getZoomPixelCoords = (deepZoomLevel, col, row) => {
     let page = getBestPageFromDeepZoomLevel(deepZoomLevel);
     if (!GT450_LEVEL_DOWNSAMPLE[downSampleFactor])  {
         // the new downscale factor should be the difference between the deep zoom level downscale factor and the page downscale factor
-        finalDownscaleFactor = downSampleFactor - page.downsampleFactor
+        finalDownscaleFactor = downSampleFactor / page.downsampleFactor
     } else {
         finalDownscaleFactor = 1
     }
-
-    
+    console.log('finalDownscaleFactor', finalDownscaleFactor)
     // Convert the col and row to base level col and row
     let baseCol = col * finalDownscaleFactor;
     let baseRow = row * finalDownscaleFactor;
