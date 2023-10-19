@@ -1,0 +1,7 @@
+node_modules
+.devcontainer
+DS_STORE
+
+# ignore image folders
+server/dz
+server/uploads
