@@ -3,7 +3,7 @@ node_modules
 dist
 dist-ssr
 public
-server/uploads
+server/images
 server/dz
 *.local
 env
