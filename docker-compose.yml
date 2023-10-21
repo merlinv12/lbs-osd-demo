@@ -1,0 +1,11 @@
+version: '3'
+services:
+  app:
+    build:
+      context: .
+    volumes:
+      - ./server/images:/app/server/images
+      - ./server/dz:/app/server/dz
+    ports:
+      - "8000:8000"
+  

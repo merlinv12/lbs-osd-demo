@@ -3,5 +3,5 @@ node_modules
 DS_STORE
 
 # ignore image folders
-server/dz
-server/images
+server/dz/*
+server/images/*

@@ -123,7 +123,7 @@ app.get('/dz/:filename/:deepZoomLevel/:colrow', async (req, res) => {
     res.setHeader('Content-Type', 'image/jpeg'); // Change to the appropriate MIME type
     let pageAndPixel = getZoomPixelCoords(Number(req.params.deepZoomLevel), col, row)
     let {top, left, width, height, page} = pageAndPixel
-    let metadata = await sharp(`./uploads/sample1.svs`, {limitInputPixels: false, page: page}).metadata()
+    let metadata = await sharp(`./images/sample1.svs`, {limitInputPixels: false, page: page}).metadata()
     const baseWidth = metadata.width
     const baseHeight = metadata.height
     let newWidth = width;
@@ -156,7 +156,7 @@ app.get('/dz/:filename/:deepZoomLevel/:colrow', async (req, res) => {
     if (newWidth < 0 || newHeight < 0) { 
      return res.send('out of bounds')
     }
-    let processedImage = await sharp('./uploads/sample1.svs', {limitInputPixels: false, page: page})
+    let processedImage = await sharp('./images/sample1.svs', {limitInputPixels: false, page: page})
     .extract({ top: top, left: left, width: newWidth, height: newHeight })
     .jpeg()
     .resize(Math.floor((1024 * newWidthRatio)), Math.floor((1024 * newHeightRatio)))
